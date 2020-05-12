@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+	<html>
+<head>
+	<meta name="DC.Title" content="National Library of Medicine - National Institutes of Health" />
+	<meta name="DC.Publisher" content="U.S. National Library of Medicine" />
+	<meta name="citation_authors" content="Harsh Prakash" />
+	<meta name="NLM.Contact.Email" content="prakashh@mail.nih.gov" />
+	<title>NIH/NLM/OCCS/GIS: Supporting Mapping Information Needs</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<link rel="stylesheet" href="css/leaflet.css" /> <!-- http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.css -->
+	<link rel="stylesheet" href="css/leaflet.label.css" /> <!-- http://leaflet.github.io/Leaflet.label/leaflet.label.css -->
+	<!-- <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet" /> -->
+	<!-- <link href="https://fonts.googleapis.com/css?family=Ultra" rel="stylesheet" /> -->
+	<style type="text/css">
+		body {
+			margin: 0px;
+			font-family: Verdana;
+			line-height: 1.25em;
+			padding: 10px;
+		}
+		h1 {
+			font-size: large;
+			font-weight: normal;
+			display: inline-block;
+			background-color: #f0f0f0;
+		}
+		h1 strong {
+			font-weight: bold;
+		}
+		h2 {
+			font-size: small;
+			font-weight: bold;
+		}
+		.leaflet-container{
+			background-color: rgb(151, 182, 213);
+		}
+		#div_popup {
+			background-color: rgb(205, 186, 134);
+			padding: 2%;
+			<!--
+			display: block;
+			margin: auto;
+			-->
+		}
+	</style>
+	<!-- <link rel="import" href="webtrends.html" /></head> -->
+<body>
+	<h1>Medicine Outreach</h1> (2014)
+	<br />
+	Air-gap mapping for Africa
+	<br /><br />
+	<div id="map" style="width: 800px; height: 600px"></div>
+	<script src="scr/jquery-1.10.2.min.js"></script> <!-- http://code.jquery.com/jquery-1.10.2.min.js -->
+	<script src="scr/leaflet.js"></script> <!-- http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js -->
+	<script src="scr/leaflet.label.js"></script> <!-- http://leaflet.github.io/Leaflet.label/leaflet.label.js -->
+	<script>
+		/*
+		"properties": {
+			"scalerank": 0,
+			"featurecla": "Admin-0 country",
+			"LABELRANK": 6,
+			"SOVEREIGNT": "Burundi",
+			"SOV_A3": "BDI",
+			"ADM0_DIF": 0,
+			"LEVEL": 2,
+			"TYPE": "Sovereign country",
+			"ADMIN": "Burundi",
+			"ADM0_A3": "BDI",
+			"GEOU_DIF": 0,
+			"GEOUNIT": "Burundi",
+			"GU_A3": "BDI",
+			"SU_DIF": 0,
+			"SUBUNIT": "Burundi",
+			"SU_A3": "BDI",
+			"BRK_DIFF": 0,
+			"NAME": "Burundi",
+			"NAME_LONG": "Burundi",
+			"BRK_A3": "BDI",
+			"BRK_NAME": "Burundi",
+			"BRK_GROUP": null,
+			"ABBREV": "Bur.",
+			"POSTAL": "BI",
+			"FORMAL_EN": "Republic of Burundi",
+			"FORMAL_FR": null,
+			"NOTE_ADM0": null,
+			"NOTE_BRK": null,
+			"NAME_SORT": "Burundi",
+			"NAME_ALT": null,
+			"MAPCOLOR7": 2,
+			"MAPCOLOR8": 2,
+			"MAPCOLOR9": 5,
+			"MAPCOLOR13": 8,
+			"POP_EST": 8988091,
+			"GDP_MD_EST": 3102,
+			"POP_YEAR": -99,
+			"LASTCENSUS": 2008,
+			"GDP_YEAR": -99,
+			"ECONOMY": "7. Least developed region",
+			"INCOME_GRP": "5. Low income",
+			"WIKIPEDIA": -99,
+			"FIPS_10_": "BY",
+			"ISO_A2": "BI",
+			"ISO_A3": "BDI",
+			"ISO_N3": "108",
+			"UN_A3": "108",
+			"WB_A2": "BI",
+			"WB_A3": "BDI",
+			"WOE_ID": 23424774,
+			"WOE_ID_EH": 23424774,
+			"WOE_NOTE": "Exact WOE match as country",
+			"ADM0_A3_IS": "BDI",
+			"ADM0_A3_US": "BDI",
+			"ADM0_A3_UN": -99,
+			"ADM0_A3_WB": -99,
+			"CONTINENT": "Africa",
+			"REGION_UN": "Africa",
+			"SUBREGION": "Eastern Africa",
+			"REGION_WB": "Sub-Saharan Africa",
+			"NAME_LEN": 7,
+			"LONG_LEN": 7,
+			"ABBREV_LEN": 4,
+			"TINY": -99,
+			"HOMEPART": 1
+		},
+		*/
+		var arr_country = ['Dem. Rep. Congo', 'Ethiopia', 'Ghana', 'Malawi', 'Mali', 'Sierra Leone', 'Uganda', 'Zambia'];
+		var dat_customgeojson = 'scr/custom.geo.json'; //// js
+		// var myCustomStyle = {
+			// stroke: true,
+			// fill: true,
+			// fillColor: 'rgb(255, 255, 255)',
+			// fillOpacity: 1
+		// }
+		
+		function fct_onEachFeature(feature, layer) {
+			// does this feature have a property named popupContent?
+			if (feature.properties && feature.properties.NAME) {
+				if (arr_country.indexOf(feature.properties.NAME) !== -1) { //// see jQuery.inArray()
+					var popup = '<b>' + feature.properties.NAME + '</b>';
+					switch (feature.properties.NAME) {
+						case 'Dem. Rep. Congo': popup += '<div><img src="img/congo.aam.jpg" />&nbsp;&nbsp;<img src="img/mali.mm.jpg" />&nbsp;&nbsp;<img src="img/mali.ehp.jpg" /><br /><a href="http://www.anafrimed.net" target="_blank">Annales Africaines de Médecine</a><br />with <a href="http://malimedical.org/" target="_blank">Mali Medical</a><br />with <a href="http://ehponline.org" target="_blank">Environmental Health Perspectives (EHP)</a></div>'; break;
+						
+						case 'Ethiopia': popup += '<div><img src="img/ethiopia.ejhs.jpg" />&nbsp;&nbsp;<img src="img/ethiopia.aim.jpg" /><br /><a href="http://ejhs.ju.edu.et/" target="_blank">Ethiopian Journal of Health Sciences (EJHS)</a><br />with <a href="http://www.annals.org/" target="_blank">Annals of Internal Medicine</a></div>'; break;
+						
+						case 'Ghana': popup += '<div><img src="img/ghana.gmj.jpg" />&nbsp;&nbsp;<img src="img/ghana.lancet.jpg" /><br /><a href="http://www.ghanamedj.org" target="_blank">Ghana Medical Journal</a><br />with <a href="http://www.thelancet.com/" target="_blank">The Lancet</a></div>'; break;
+						
+						case 'Malawi': popup += '<div><img src="img/malawi.mmj.jpg" />&nbsp;&nbsp;<img src="img/malawi.jama.jpg" /><br /><a href="http://www.medcol.mw/mmj/" target="_blank">Malawi Medical Journal</a><br />with <a href="http://jama.ama-assn.org/" target="_blank">JAMA</a></div>'; break;
+						
+						case 'Mali': popup += '<div><img src="img/mali.mm.jpg" />&nbsp;&nbsp;<img src="img/mali.ehp.jpg" /><br /><a href="http://malimedical.org/" target="_blank">Mali Medical</a><br />with <a href="http://ehponline.org" target="_blank">Environmental Health Perspectives (EHP)</a></div>'; break;
+						
+						case 'Sierra Leone': popup += '<div><img src="img/sierra_leone.sljbm.jpg" />&nbsp;&nbsp;<img src="img/ghana.gmj.jpg" />&nbsp;&nbsp;<img src="img/ghana.lancet.jpg" /><br /><a href="http://www.sljbr.org/" target="_blank">Sierra Leone Journal of Biomedical Research</a><br />with <a href="http://www.ghanamedj.org" target="_blank">Ghana Medical Journal</a><br />with <a href="http://www.thelancet.com/" target="_blank">The Lancet</a></div>'; break;
+						
+						case 'Uganda': popup += '<div><img src="img/uganda.ahs.jpg" />&nbsp;&nbsp;<img src="img/uganda.bmj.jpg" /><br /><a href="http://www.bioline.org.br/hs" target="_blank">African Health Sciences</a><br />with <a href="http://www.bmj.com/" target="_blank">BMJ</a></div>'; break;
+						
+						case 'Zambia': popup += '<div><img src="img/zambia.mjz.jpg" />&nbsp;&nbsp;<img src="img/zambia.nejm.jpg" /><br /><a href="http://www.mjz.co.zm/" target="_blank">Medical Journal of Zambia</a><br />with <a href="http://www.nejm.org/" target="_blank">The New England Journal of Medicine</a></div>'; break;
+					}
+					// popup += '<div><sub>Economy: ' + feature.properties.ECONOMY + '<br />(<a href="https://www.worldbank.org/" target="_blank">World Bank</a>)</sub></div>';
+					layer.bindPopup('<div id="div_popup">' + popup + '</div>');
+				} else {
+					layer.bindPopup(feature.properties.NAME);
+				}
+			}
+			// layer.bindLabel(feature.properties.NAME, { noHide: true }); //// hover
+		}
+		
+		$.getJSON(dat_customgeojson, function(data) {
+			var map = L.map('map').setView([0, 20], 3);
+			
+			L.geoJson(data, {
+				clickable: true,
+				// pointToLayer: function (feature, latlng) {
+					// return L.marker(latlng).bindLabel(feature.properties.NAME, { noHide: true }); //// for points - http://jsfiddle.net/jacobtoye/ffxPd/1/
+				// },
+				onEachFeature: fct_onEachFeature,
+				// style: myCustomStyle
+				style: function(feature) {
+					// switch (feature.properties.NAME) {
+						// case 'Dem. Rep. Congo': return {color: 'rgb(255, 0, 0)'};
+					// }
+					if (arr_country.indexOf(feature.properties.NAME) !== -1) {
+						// return {color: 'rgb(7, 106, 204)'};
+						return {
+							color: 'rgb(255, 255, 255)',
+							fillColor: 'rgb(7, 106, 204)', //// fillColor: getColor(feature.properties.density)
+							opacity: 1,
+							fillOpacity: 0.9,
+							weight: 1
+							// dashArray: '2'
+						};
+					} else {
+						return {
+							color: 'rgb(255, 255, 255)',
+							fillColor: 'rgb(207, 207, 185)',
+							opacity: 1,
+							fillOpacity: 0.9,
+							weight: 1
+						};
+					}
+				}
+			})
+			// .bindLabel('LABEL', { noHide: true }) //// https://github.com/Leaflet/Leaflet.label, http://leaflet.github.io/Leaflet.label/
+			.addTo(map);
+			// .showLabel(); //// leaflet.label doesn't support static labels for vectors, (specifically, geojson polygons and multipolygons) - https://github.com/Leaflet/Leaflet.label/issues/15
+			
+			// L.geoJson(data).bindPopup('POP').openPopup();
+			// L.geoJson(data).bindLabel('LABEL', { noHide: true }).addTo(map).showLabel();
+			
+			/*
+			var mrk = L.marker([-20, -20], { opacity: 0.01 }).bindLabel('<div style="font-family: oswald;">AFRICAN JOURNAL<br />PARTNERSHIP PROJECT<br />(AJPP)</div>', { noHide: true })
+			.addTo(map)
+			.showLabel();
+			*/
+			var ico = L.divIcon({className: '', html: '<div style="font-family: helvetica;">AFRICAN JOURNAL<br />PARTNERSHIP PROJECT<br />(AJPP)</div>'}); //// set className .my-div-icon styles in css
+			L.marker([-10, -10], {icon: ico}).addTo(map);
+			var ico_atlantic = L.divIcon({className: '', html: '<div style="font-family: verdana; color: rgb(0, 0, 255);">ATLANTIC<br />OCEAN</div>'});
+			L.marker([-30, -30], {icon: ico_atlantic}).addTo(map);
+			var ico_atlantic = L.divIcon({className: '', html: '<div style="font-family: verdana; color: rgb(0, 0, 255);">INDIAN<br />OCEAN</div>'});
+			L.marker([-30, 60], {icon: ico_atlantic}).addTo(map);
+			
+			/*
+			L.geoJson(data, {
+				onEachFeature: function(feature) {
+				}
+			}).addTo(map);
+			*/
+			/*
+			label_01 = new L.Label();
+			label_01.setContent('Dem .Rep. Congo');
+			// label_01.setLatLng(L.geoJson(data).getBounds().getCenter()); /// for data
+			label_01.setLatLng([0, 15]); /// for data
+			map.showLabel(label_01);
+				// map.on('click', function(e) {
+					// alert('Lat, Lon: ' + e.latlng.lat + ', ' + e.latlng.lng)
+				// });
+				label_02 = new L.Label();
+				map.showLabel(label_02.setContent('Ethiopia').setLatLng([8.92, 39.55]));
+				label_03 = new L.Label();
+				map.showLabel(label_03.setContent('Ghana').setLatLng([8.05, -1.05]));
+				label_04 = new L.Label();
+				map.showLabel(label_04.setContent('Malawi').setLatLng([-13.23, 33.83]));
+				label_05 = new L.Label();
+				map.showLabel(label_05.setContent('Mali').setLatLng([16.46, -1.75]));
+				label_06 = new L.Label();
+				map.showLabel(label_06.setContent('Sierra Leone').setLatLng([8.58, -11.77]));
+				label_07 = new L.Label();
+				map.showLabel(label_07.setContent('Uganda').setLatLng([ 1.49, 32.60]));
+				label_08 = new L.Label();
+				map.showLabel(label_08.setContent('Zambia').setLatLng([-14.09, 27.33]));
+			*/
+			// zoom: 3 = default
+			map._layersMaxZoom = 5; //// +
+			map._layersMinZoom = 2; //// -
+		})
+	</script>
+</body>
+	</html>

@@ -1,0 +1,14 @@
+{
+"type": "FeatureCollection",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "ZIP": "60612", "STATE": "IL", "PO_NAME": "Chicago", "INST": "University of Illinois, Chicago" }, "geometry": { "type": "Point", "coordinates": [ -87.687501917103845, 41.88049702226305 ] } },
+{ "type": "Feature", "properties": { "ZIP": "84112", "STATE": "UT", "PO_NAME": "Salt Lake City", "INST": "University of Utah" }, "geometry": { "type": "Point", "coordinates": [ -111.84254193959998, 40.765205021224354 ] } },
+{ "type": "Feature", "properties": { "ZIP": "98195", "STATE": "WA", "PO_NAME": "Seattle", "INST": "University of Washington" }, "geometry": { "type": "Point", "coordinates": [ -122.30194894934107, 47.654981027640957 ] } },
+{ "type": "Feature", "properties": { "ZIP": "90095", "STATE": "CA", "PO_NAME": "Los Angeles", "INST": "University of California, Los Angeles" }, "geometry": { "type": "Point", "coordinates": [ -118.44263794574681, 34.070337014989271 ] } },
+{ "type": "Feature", "properties": { "ZIP": "01655", "STATE": "MA", "PO_NAME": "Worcester", "INST": "University of Massachusetts, Medical Center" }, "geometry": { "type": "Point", "coordinates": [ -71.759300902269558, 42.277671022632944 ] } },
+{ "type": "Feature", "properties": { "ZIP": "21201", "STATE": "MD", "PO_NAME": "Baltimore", "INST": "University of Maryland, Baltimore" }, "geometry": { "type": "Point", "coordinates": [ -76.622461906798733, 39.294704019854841 ] } },
+{ "type": "Feature", "properties": { "ZIP": "15261", "STATE": "PA", "PO_NAME": "Pennsylvania", "INST": "University of Pittsburgh" }, "geometry": { "type": "Point", "coordinates": [ -80.059249251586522, 40.472569512849752 ] } },
+{ "type": "Feature", "properties": { "ZIP": "77030", "STATE": "TX", "PO_NAME": "Houston", "INST": "Houston Academy of Medicine, Texas Medical Center Library" }, "geometry": { "type": "Point", "coordinates": [ -95.400953924287563, 29.708318010926824 ] } }
+]
+}

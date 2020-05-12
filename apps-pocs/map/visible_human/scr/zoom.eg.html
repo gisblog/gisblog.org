@@ -1,0 +1,81 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge" /><title>
+	Seadragon Ajax - Getting Started
+</title>
+    <!-- build [[BUILD]] on [[DATETIME]] -->
+    
+    <meta name="keywords" content="seadragon, deep zoom, deepzoom, live labs, livelabs, microsoft, zoom, image, photo, photograph, picture, multiresolution, create, embed, share" />
+    
+    <meta name="description" content="Seadragon Ajax, brought to you by Microsoft, is an implementation of Seadragon zooming technology built purely in JavaScript. Learn how to get started here." />
+
+    <link rel="stylesheet" type="text/css" href="styles/common.css" />
+    <link rel="stylesheet" type="text/css" href="styles/info-page.css" />
+
+    <base href="http://www.seadragon.com/" />
+    
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+    <script type="text/javascript">
+        var BASE = "http://www.seadragon.com/";    
+        var PUBLIC = "http://zoom.it/";
+        
+        function $(elmt) {
+            if (typeof elmt == "string") {
+                return document.getElementById(elmt);
+            }
+            return elmt;
+        }
+        
+        if (typeof Seadragon === "undefined") {
+            Seadragon = {};
+        }
+    </script>
+    
+</head>
+
+<body>
+    
+        <noscript>
+            <div>
+                <!-- inspired by RememberTheMilk.com's noscript text -->
+                <p>
+                    <strong>Uh oh! You don't appear to have Javascript enabled.</strong>
+                    We're sorry, but Seadragon.com requires Javascript to function.
+                </p>
+                <p>
+                    If you have a modern browser, you can turn Javascript on (we promise,
+                    it's worth it). Otherwise, consider upgrading to a recent version of
+                    <a target="_blank"
+                    href="http://www.microsoft.com/windows/internet-explorer/download-ie.aspx">
+                    Internet Explorer</a>.
+                </p>
+                <p>
+                    We hope you'll check us out with Javascript enabled!
+                </p>
+				</div>
+        </noscript>
+
+			<script type="text/javascript" src="ajax/0.8/seadragon-min.js"></script>
+			<script type="text/javascript">			        
+			        var viewer = null;
+			        
+			        function init() {
+			            viewer = new Seadragon.Viewer("container");
+			            viewer.openDzi('http://static.seadragon.com/content/misc/carina-nebula.dzi','<Image TileSize="254" Overlap="1" Format="jpg" xmlns="http://schemas.microsoft.com/deepzoom/2008"><Size Width="29566" Height="14321"/></Image>');
+			        }
+			        
+			        Seadragon.Utils.addEvent(window, "load", init);
+			    </script>
+			
+			<div id="container">&nbsp;</div>
+
+</body>
+
+</html>

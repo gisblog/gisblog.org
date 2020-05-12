@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+	<html>
+<head>
+	<meta charset="utf-8">
+	<!-- seadragon: css -->
+	<style>
+		#container
+            {
+                width: 500px;
+                height: 400px;
+                background-color: black;
+                border: 1px solid black;
+                color: white;   /* for error messages, etc. */
+            }
+    </style>
+	<!-- jquery -->
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+	<!-- zoomit -->
+	<script>
+		var viewer = new Seadragon.Viewer("container");
+		 
+		function onZoomitResponse(resp) {
+			if (resp.error) {
+				// e.g. the URL is malformed or the service is down
+				alert(resp.error);
+				return;
+			}
+			 
+			var content = resp.content;
+			 
+			if (content.ready) {
+				viewer.openDzi(content.dzi);
+			} else if (content.failed) {
+				alert(content.url + " failed to convert.");
+			} else {
+				alert(content.url + " is " +
+					Math.round(100 * content.progress) + "% done.");
+			}
+		}
+		 
+		$.ajax({
+			url: "http://api.zoom.it/v1/content/?url=" +
+				encodeURIComponent("https://gis.nlm.nih.gov/img/map/nomc/l.gif"),
+			dataType: "jsonp",
+			success: onZoomitResponse
+		});
+	</script>
+	<!-- seadragon: js - seadragon.com has been retired. host a local copy from http://seadragon.com/ajax/0.8/seadragon-min.zip. see http://gallery.expression.microsoft.com/SeadragonAjax/ -->
+	<script src="https://gis.nlm.nih.gov/scr/seadragon/seadragon-min.js"></script>
+	<script>
+        var viewer = null;
+           
+        function init() {
+            viewer = new Seadragon.Viewer("container");
+            viewer.openDzi("carina-nebula.dzi");
+        }
+           
+        Seadragon.Utils.addEvent(window, "load", init);
+    </script>
+</head>
+<body>
+	<div id="container"></div>
+</body>
+	</html>

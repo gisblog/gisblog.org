@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+	<html lang="en">
+<head>
+	<meta name="DC.Title" content="National Library of Medicine - National Institutes of Health" />
+	<meta name="DC.Publisher" content="U.S. National Library of Medicine" />
+	<meta name="citation_authors" content="Harsh Prakash" />
+	<meta name="NLM.Contact.Email" content="prakashh@mail.nih.gov" />
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="viewport" content="initial-scale=1.0, width=device-width, user-scalable=no" />
+	<title>NIH/NLM/OCCS/GIS: Supporting Mapping Information Needs</title>
+	<link rel="dns-prefetch" href="//nationalmap.gov">
+	<link rel="dns-prefetch" href="//nationalatlas.gov">
+	<link rel="dns-prefetch" href="//census.gov">
+	<link rel="dns-prefetch" href="//columbia.edu">
+	<link rel="dns-prefetch" href="//google.com">
+	<link rel="dns-prefetch" href="//googleapis.com">
+	<link rel="prefetch" href="css/map/lib/nih.css">
+	<link rel="prefetch" href="scr/map/lib/nih.js">
+	<link rel="prefetch" href="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+	<link rel="prefetch" href="data/point/hospital_general_information.buffer.small.dissolve.json">
+	<link rel="prefetch" href="data/point/hospital_general_information.json">
+	<link rel="prefetch" href="data/point/rml.json">
+	<link rel="subresource" href="css/map/lib/nih.css">
+	<link rel="subresource" href="scr/map/lib/nih.js">
+	<link rel="subresource" href="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+	<link rel="subresource" href="data/point/hospital_general_information.buffer.small.dissolve.json">
+	<link rel="subresource" href="data/point/hospital_general_information.json">
+	<link rel="subresource" href="data/point/rml.json">
+	<link rel="prerender" href="css/map/lib/nih.css">
+	<link rel="prerender" href="scr/map/lib/nih.js">
+	<link rel="prerender" href="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+	<link rel="prerender" href="data/point/hospital_general_information.buffer.small.dissolve.json">
+	<link rel="prerender" href="data/point/hospital_general_information.json">
+	<link rel="prerender" href="data/point/rml.json">
+	<link href="https://fonts.googleapis.com/css?family=Ultra" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" />
+	<link href="css/map/lib/nih.css" rel="stylesheet" type="text/css" />
+	<style>
+		html {
+			width: 95%;
+			height: 90%;
+		}
+		body {
+			width: 100%;
+			height: 100%;
+			font-family: verdana;
+		}
+		.layersDiv {
+			background-color: rgb(128, 128, 128) !important;
+			opacity: 0.75 !important;
+			overflow-x: hidden !important;
+			overflow-y: scroll !important;
+			-webkit-overflow-scrolling: touch !important;
+		}
+		.olImageLoadError {
+			display: none !important;
+		}
+		#div_map1 {
+			border: 1px solid rgb(128, 128, 128);
+		}
+		#div_sidebar_left, #div_sidebar_right {
+			height: 600px;
+			border: 1px solid rgb(128, 128, 128);
+		}
+		#div_menu_top, #div_result_wfs {
+			height: 300px;
+			padding: 2%;
+		}
+		#div_result, #div_result_other {
+			color: rgb(64, 64, 64);
+			background-color: rgb(240, 240, 240);
+			box-shadow: 2px 2px 2px rgb(224, 224, 224);
+			padding: 2%;
+			border-radius: 10px;
+		}
+		#div_result_other {
+			margin: 2%;
+			position: relative;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			word-wrap: break-word;
+			background: linear-gradient(rgb(250, 250, 250), rgb(225, 225, 225));
+			background: -moz-linear-gradient(rgb(250, 250, 250), rgb(225, 225, 225));
+			background: -webkit-linear-gradient(rgb(250, 250, 250), rgb(225, 225, 225));
+			background: -o-linear-gradient(rgb(250, 250, 250), rgb(225, 225, 225));
+		}
+		#div_result_title {
+			font-family: georgia;
+			font-weight: bold;
+			color: rgb(51, 51, 102);
+			background-color: rgb(240, 240, 240);
+			box-shadow: 2px 2px 2px rgb(224, 224, 224);
+			padding: 2%;
+			border-radius: 10px;
+			background: linear-gradient(rgb(250, 250, 250), rgb(225, 225, 225));
+			background: -moz-linear-gradient(rgb(250, 250, 250), rgb(225, 225, 225));
+			background: -webkit-linear-gradient(rgb(250, 250, 250), rgb(225, 225, 225));
+			background: -o-linear-gradient(rgb(250, 250, 250), rgb(225, 225, 225));
+		}
+		#span_result_title {
+			color: rgb(172, 172, 171);
+		}
+		#span_result_location {
+			color: rgb(81, 63, 8);
+		}
+		#mrk_id {
+			background-color: rgb(254, 254, 198);
+		}
+		#div_menu_top {
+			display: none;
+		}
+		#div_result_wfs {
+			overflow-x: hidden;
+			overflow-y: scroll;
+			-webkit-overflow-scrolling: touch;
+		}
+		#div_menu_bottom, #div_result_wms {
+			padding: 2%;
+		}
+		#div_legend {
+			display: none;
+			width: 0px;
+			height: 0px;
+		}
+		#div_opacity {
+			width: 0px;
+			height: 0px;
+		}
+		#hr_min {
+			background: rgb(240, 240, 240);
+			border: 1px;
+			height: 1px;
+		}
+		#hr_max {
+			background: rgb(240, 240, 240);
+			border: 2px;
+			height: 2px;
+		}
+		#sel_quicklinks {
+			width: 180px;
+		}
+		#but_census, #but_locate {
+			cursor: pointer;
+			padding: 2px 10px;
+ 			background-color: rgb(250, 250, 250);
+ 			border: 1px solid rgb(200, 200, 200);
+			border-radius: 5px;
+			-moz-border-radius: 5px;
+			-webkit-border-radius: 5px;
+			-o-border-radius: 5px;
+			box-shadow: 0 0 2px rgba(0, 0, 0, .75);
+			-moz-box-shadow: 0 0 2px rgba(0, 0, 0, .75);
+			-webkit-box-shadow: 0 0 2px rgba(0, 0, 0, .75);
+			-o-box-shadow: 0 0 2px rgba(0, 0, 0, .75);
+			color: rgb(128, 128, 128);
+			font-size: 1.0em;
+		}
+		#but_census:hover, #but_census:focus, #but_locate:hover, #but_locate:focus {
+			background-color: rgb(225, 225, 225);
+ 			color: rgb(64, 64, 64);
+			box-shadow: 0 0 1px rgba(0,0,0, .75);
+			-moz-box-shadow: 0 0 1px rgba(0,0,0, .75);
+			-webkit-box-shadow: 0 0 1px rgba(0,0,0, .75);
+			-o-box-shadow: 0 0 1px rgba(0,0,0, .75);
+		}
+		div.embed {
+			width: auto;
+			background-color: #ffffff;
+			position: absolute;
+			left: 0%;
+			top: 0%;
+			margin: 0 auto;
+			border: 1px solid rgb(128, 128, 128);
+			cursor: pointer;
+			word-break: break-all;
+		}
+	</style>
+	<script src="scr/map/lib/nih.js" charset="utf-8"></script>
+	<!-- <script async defer src="https://maps.google.com/maps/api/js?key=###&callback=initMap"></script> // gcp: sensor param is no longer req -->
+	<script src="https://maps.googleapis.com/maps/api/js?AIzaSyDD_SqN5CcRjBEzHg_lToEfVgY1E0-k8H0"></script>
+	<script defer="defer">
+		var map1, nih_url, nih_layer_01, nih_layer_02, nih_layer_rgn1, nih_layer_rgn2, nih_layer_rgn3, nih_layer_rgn4, nih_layer_rgn5, nih_layer_rgn6, nih_layer_rgn7, nih_layer_rgn8, nih_layer_ntc, nih_layer_oerc, nih_layer_act1, nih_layer_act2, nih_layer_act3, nih_layer_act4, nih_layer_act5, nih_layer_act6, nih_layer_act7, nih_layer_act8, nih_layer_prj1, nih_layer_prj2, nih_layer_prj3, nih_layer_prj4, nih_layer_prj5, nih_layer_prj6, nih_layer_prj7, nih_layer_prj8, nih_layer_docline, nih_layer_rml, nih_sld_a, nih_style_rgn1, nih_style_rgn2, nih_style_rgn3, nih_style_rgn4, nih_style_rgn5, nih_style_rgn6, nih_style_rgn7, nih_style_rgn8, nih_style_ntcoerc, nih_style_docline, nih_style_rml, nih_style_act, nih_style_prj, nih_style_hospital_heatmap, nih_style_hospital_buffer, nih_style_hospital, nih_strategy_geo, nih_strategy_rgn, nih_strategy_docline, nih_strategy_rml, nih_strategy_act1, nih_strategy_act2, nih_strategy_act3, nih_strategy_act4, nih_strategy_act5, nih_strategy_act6, nih_strategy_act7, nih_strategy_act8, nih_strategy_prj1, nih_strategy_prj2, nih_strategy_prj3, nih_strategy_prj4, nih_strategy_prj5, nih_strategy_prj6, nih_strategy_prj7, nih_strategy_prj8, nih_strategy_hospital_heatmap, nih_strategy_hospital_buffer, nih_strategy_hospital; var max_opacity = 0.9;
+		var min_opacity = 0.1;
+		
+		onerror = fct_error;
+		var txt = "";
+		function fct_error ( msg, url, l ) {
+			txt = "Error: " + msg + "\n";
+			txt += "URL: " + url + "\n";
+			txt += "Line: " + l + "\n\n";
+			alert( txt );
+			return true;
+		}
+		
+		function fct_layerswitcher() {
+			document.onmouseover = function(e) {
+				var target;
+				if (!e) {
+					var e = window.event;
+				}
+				if (e.target) {
+					target = e.target;
+				} else if (e.srcElement) {
+					target = e.srcElement;
+				}
+				if (target.nodeType == 3) {
+					target = target.parentNode;
+				}
+				if(typeof map1 !== 'undefined') {
+					if (target.id === 'OpenLayers_Control_LayerSwitcher_2_layersDiv') {
+						for (var i = 0; i < map1.controls.length; i++) {
+							if (map1.controls[i].displayClass === "olControlNavigation") {
+								map1.controls[i].deactivate();
+							}
+						}
+					} else {
+						for (var i = 0; i < map1.controls.length; i++) {
+							if (map1.controls[i].displayClass === "olControlNavigation") {
+								map1.controls[i].activate();
+							}
+						}
+					}
+				}
+			}
+		}
+		fct_layerswitcher();
+		
+		function fct_folder ( in_1, in_2, in_3 ) {
+			document.getElementById(in_1).style.background = '#f0f0f0';
+			document.getElementById(in_2).style.background = '';
+			document.getElementById(in_3).style.background = '';
+			document.getElementById('div_'+in_1).style.display = '';
+			document.getElementById('div_'+in_2).style.display = 'none';
+			document.getElementById('div_'+in_3).style.display = 'none';
+		}
+		
+		function fct_fold ( in_sign, in_content ) {
+			if(document.getElementById(in_content).style.display != 'none') {
+				// fold:
+				document.getElementById(in_sign).innerHTML = '[+]';
+				document.getElementById(in_content).style.display = 'none';
+			} else {
+				// unfold:
+				document.getElementById(in_sign).innerHTML = '[-]';
+				document.getElementById(in_content).style.display = '';
+			}
+		}
+		
+		function fct_show ( in_1 ) {
+			document.getElementById(in_1).style.display = '';
+		}
+		
+		function fct_hide ( in_1 ) {
+			document.getElementById(in_1).style.display = 'none';
+		}
+		
+		function fct_geturl ( in_geturl ) {
+			var getvariables, i;
+			if ( window.location.href.split('?').length > 1 ) {
+				getvariables = window.location.href.split('?')[1].split('&');
+				for ( i in getvariables ) {
+					if ( getvariables[i].split('=')[0] === in_geturl && getvariables[i].split('=').length > 1 ) {
+						return getvariables[i].split('=')[1].replace(/\+/gi," ").replace(/%20/gi," ").replace(/%21/gi,"!").replace(/%27/gi,"'").replace(/%28/gi,"(").replace(/%29/gi,")").replace(/%2B/gi," ").replace(/%2C/gi,",").replace(/%2F/gi,"/").replace(/%3C/gi,"<").replace(/%3D/gi,"=").replace(/%3E/gi,">");
+					}
+				}
+			}
+			return true;
+		}
+		
+		function fct_opacity(by_opacity) {
+			var new_opacity = (parseFloat(OpenLayers.Util.getElement('opacity').value) + by_opacity).toFixed(1);
+			new_opacity = Math.min(max_opacity, Math.max(min_opacity, new_opacity));
+			OpenLayers.Util.getElement('opacity').value = new_opacity;
+		};
+		
+		function fct_result_wfs(feature) {
+			if (feature.layer.name.indexOf('Activit') >= 0) {
+				var html = '';
+				var arr_i = [];
+				if ( typeof feature.cluster !== 'undefined' ) {
+					html += '<div id="div_result_title">At this location, you will find multiple <span id="span_result_title">(' + feature.cluster.length + ')</span> activities</div><hr id="hr_min" />';
+					for ( var ii = 0; ii < feature.cluster.length; ii++ ) {
+						fk_form_id = feature.cluster[ii].attributes.fk_form_id;
+						county = feature.cluster[ii].attributes.county;
+						act_name = feature.cluster[ii].attributes.act_name;
+						act_desc = feature.cluster[ii].attributes.act_desc;
+ 						zip_code_geom = feature.cluster[ii].attributes.zip_code_geom;
+						html += '<div id="div_result">' + act_name + ' (ID: <mark id="mrk_id">' + fk_form_id + '</mark>), ' + county + ' County <a href="https://maps.google.com/maps?saddr=current+location&daddr=' + zip_code_geom + '" target="_blank">' + zip_code_geom + '</a></div><hr id="hr_min" />';
+					}
+					html += '';
+				} else {
+					html += '<div id="div_result_title">At this location, you will find one activity</div><hr id="hr_min" />';
+					for ( var i in feature.attributes ) {
+						if ( i === 'fk_form_id' ) { arr_i.fk_form_id = feature.attributes[i]; }
+						if ( i === 'county' ) { arr_i.county = feature.attributes[i]; }
+						if ( i === 'act_name' ) { arr_i.act_name = feature.attributes[i]; }
+						if ( i === 'act_desc' ) { arr_i.act_desc = feature.attributes[i]; }
+						if ( i === 'zip_code_geom' ) { arr_i.zip_code_geom = feature.attributes[i]; }
+					}
+					html += '<div id="div_result">' + arr_i.act_name + ' (ID: <mark id="mrk_id">' + arr_i.fk_form_id + '</mark>), ' + arr_i.county + ' County <a href="https://maps.google.com/maps?saddr=current+location&daddr=' + arr_i.zip_code_geom + '" target="_blank">' + arr_i.zip_code_geom + '</a></div><hr id="hr_min" />';
+					html += '';
+				}
+				OpenLayers.Util.getElement('div_result_wfs').innerHTML = html.replace(/Ã¡/g, '&aacute;').replace(/Ã¤/g, '&auml;').replace(/Ã©/g, '&eacute;').replace(/Ã¨/g, '&egrave;').replace(/Ã³/g, '&oacute;').replace(/Ãº/g, '&uacute;').replace(/Ã¼/g, '&uuml;').replace(/Ã±/g, '&ntilde;').replace(/â€™/g, '\'').replace(/Ã/g, '&iacute;');
+			}
+			if (feature.layer.name.indexOf('Project') >= 0) {
+				var html = '';
+				var arr_i = [];
+				if ( typeof feature.cluster !== 'undefined' ) {
+					html += '<div id="div_result_title">At this location, you will find multiple <span id="span_result_title">(' + feature.cluster.length + ')</span> projects</div><hr id="hr_min" />';
+					for ( var ii = 0; ii < feature.cluster.length; ii++ ) {
+						project_id = feature.cluster[ii].attributes.project_id;
+						project_title = feature.cluster[ii].attributes.project_title;
+						tracking_num = feature.cluster[ii].attributes.tracking_num;
+						component_id = feature.cluster[ii].attributes.component_id;
+						org_id = feature.cluster[ii].attributes.org_id;
+						city = feature.cluster[ii].attributes.city;
+						state_code = feature.cluster[ii].attributes.state_code;
+						zipcode = feature.cluster[ii].attributes.zipcode;
+						county = feature.cluster[ii].attributes.county;
+						congressional_dist = feature.cluster[ii].attributes.congressional_dist;
+						country = feature.cluster[ii].attributes.country;
+						html += '<div id="div_result">' + project_title + ' (ID: <mark id="mrk_id">' + tracking_num + '</mark>), ' + county + ' County <a href="https://maps.google.com/maps?saddr=current+location&daddr=' + zipcode + '" target="_blank">' + zipcode + '</a></div><hr id="hr_min" />';
+					}
+					html += '';
+				} else {
+					html += '<div id="div_result_title">At this location, you will find one project</div><hr id="hr_min" />';
+					for ( var i in feature.attributes ) {
+						if ( i === 'project_id' ) { arr_i.project_id = feature.attributes[i]; }
+						if ( i === 'project_title' ) { arr_i.project_title = feature.attributes[i]; }
+						if ( i === 'tracking_num' ) { arr_i.tracking_num = feature.attributes[i]; }
+						if ( i === 'component_id' ) { arr_i.component_id = feature.attributes[i]; }
+						if ( i === 'org_id' ) { arr_i.org_id = feature.attributes[i]; }
+						if ( i === 'city' ) { arr_i.city = feature.attributes[i]; }
+						if ( i === 'state_code' ) { arr_i.state_code = feature.attributes[i]; }
+						if ( i === 'zipcode' ) { arr_i.zipcode = feature.attributes[i]; }
+						if ( i === 'county' ) { arr_i.county = feature.attributes[i]; }
+						if ( i === 'congressional_dist' ) { arr_i.congressional_dist = feature.attributes[i]; }
+						if ( i === 'country' ) { arr_i.country = feature.attributes[i]; }
+					}
+					html += '<div id="div_result">' + arr_i.project_title + ' (ID: <mark id="mrk_id">' + arr_i.tracking_num + '</mark>), ' + arr_i.county + ' County <a href="https://maps.google.com/maps?saddr=current+location&daddr=' + arr_i.zipcode + '" target="_blank">' + arr_i.zipcode + '</a></div><hr id="hr_min" />';
+					html += '';
+				}
+				OpenLayers.Util.getElement('div_result_wfs').innerHTML = html.replace(/Ã¡/g, '&aacute;').replace(/Ã¤/g, '&auml;').replace(/Ã©/g, '&eacute;').replace(/Ã¨/g, '&egrave;').replace(/Ã³/g, '&oacute;').replace(/Ãº/g, '&uacute;').replace(/Ã¼/g, '&uuml;').replace(/Ã±/g, '&ntilde;').replace(/â€™/g, '\'').replace(/Ã/g, '&iacute;');
+			}
+			if (feature.layer.name.indexOf('Hospitals') >= 0) {
+				var html = '';
+				var arr_i = [];
+				if ( typeof feature.cluster !== 'undefined' ) {
+					html += '<div id="div_result_title">At this location, you will find multiple <span id="span_result_title">(' + feature.cluster.length + ')</span> hospitals</div><hr id="hr_min" />';
+					for ( var ii = 0; ii < feature.cluster.length; ii++ ) {
+						h_name = feature.cluster[ii].attributes["Hospital Name"];
+						h_address = feature.cluster[ii].attributes["Address"];
+						h_city = feature.cluster[ii].attributes["City"];
+						h_st = feature.cluster[ii].attributes["State"];
+						h_zip = feature.cluster[ii].attributes["ZIP Code"];
+						h_type = feature.cluster[ii].attributes["Hospital Type"];
+						h_owner = feature.cluster[ii].attributes["Hospital Ownership"];
+						h_emergency = feature.cluster[ii].attributes["Emergency Services"];
+						html += '<div id="div_result">' + h_name + ', ' + h_city + ' ' + h_st + ' ' + h_zip + ' (Type: ' + h_type + ', ' + h_owner + '; Emergency Services: <mark id="mrk_id">' + h_emergency + '</mark>)</div><hr id="hr_min" />';
+					}
+					html += '';
+				} else {
+					html += '<div id="div_result_title">At this location, you will find one hospital</div><hr id="hr_min" />';
+					for ( var i in feature.attributes ) {
+						if ( i === 'Hospital Name' ) { arr_i.h_name = feature.attributes[i]; }
+						if ( i === 'Address' ) { arr_i.h_address = feature.attributes[i]; }
+						if ( i === 'City' ) { arr_i.h_city = feature.attributes[i]; }
+						if ( i === 'State' ) { arr_i.h_st = feature.attributes[i]; }
+						if ( i === 'ZIP Code' ) { arr_i.h_zip = feature.attributes[i]; }
+						if ( i === 'Hospital Type' ) { arr_i.h_type = feature.attributes[i]; }
+						if ( i === 'Hospital Ownership' ) { arr_i.h_owner = feature.attributes[i]; }
+						if ( i === 'Emergency Services' ) { arr_i.h_emergency = feature.attributes[i]; }
+					}
+					html += '<div id="div_result">' + arr_i.h_name + ', ' + arr_i.h_city + ' ' + arr_i.h_st + ' ' + arr_i.h_zip + ' (Type: ' + arr_i.h_type + ', ' + arr_i.h_owner + '; Emergency Services: <mark id="mrk_id">' + arr_i.h_emergency	+ '</mark>)</div><hr id="hr_min" />';
+					html += '';
+				}
+				OpenLayers.Util.getElement('div_result_wfs').innerHTML = html.replace(/Ã¡/g, '&aacute;').replace(/Ã¤/g, '&auml;').replace(/Ã©/g, '&eacute;').replace(/Ã¨/g, '&egrave;').replace(/Ã³/g, '&oacute;').replace(/Ãº/g, '&uacute;').replace(/Ã¼/g, '&uuml;').replace(/Ã±/g, '&ntilde;').replace(/â€™/g, '\'').replace(/Ã/g, '&iacute;');
+			}
+			if (feature.layer.name.indexOf('RML') >= 0) {
+				var html = '';
+				var arr_i = [];
+				if ( typeof feature.cluster !== 'undefined' ) {
+					html += '<div id="div_result_title">At this location, you will find multiple <span id="span_result_title">(' + feature.cluster.length + ')</span> Regional Medical Libraries</div><hr id="hr_min" />';
+					for ( var ii = 0; ii < feature.cluster.length; ii++ ) {
+						rml_zip = feature.cluster[ii].attributes["ZIP"];
+						rml_st = feature.cluster[ii].attributes["STATE"];
+						rml_place = feature.cluster[ii].attributes["PO_NAME"];
+						rml_ins = feature.cluster[ii].attributes["INST"];
+						html += '<div id="div_result">' + rml_ins + ', ' + rml_place + ' ' + rml_st + ' ' + rml_zip + '</div><hr id="hr_min" />';
+					}
+					html += '';
+				} else {
+					html += '<div id="div_result_title">At this location, you will find one Regional Medical Library</div><hr id="hr_min" />';
+					for ( var i in feature.attributes ) {
+						if ( i === 'ZIP' ) { arr_i.rml_zip = feature.attributes[i]; }
+						if ( i === 'STATE' ) { arr_i.rml_st = feature.attributes[i]; }
+						if ( i === 'PO_NAME' ) { arr_i.rml_place = feature.attributes[i]; }
+						if ( i === 'INST' ) { arr_i.rml_ins = feature.attributes[i]; }
+					}
+					html += '<div id="div_result">' + arr_i.rml_ins + ', ' + arr_i.rml_place + ' ' + arr_i.rml_st + ' ' + arr_i.rml_zip + '</div><hr id="hr_min" />';
+					html += '';
+				}
+				OpenLayers.Util.getElement('div_result_wfs').innerHTML = html.replace(/Ã¡/g, '&aacute;').replace(/Ã¤/g, '&auml;').replace(/Ã©/g, '&eacute;').replace(/Ã¨/g, '&egrave;').replace(/Ã³/g, '&oacute;').replace(/Ãº/g, '&uacute;').replace(/Ã¼/g, '&uuml;').replace(/Ã±/g, '&ntilde;').replace(/â€™/g, '\'').replace(/Ã/g, '&iacute;');
+			}
+			if (feature.layer.name.indexOf('DOCLINE') >= 0) {
+				var html = '';
+				var arr_i = [];
+				if ( typeof feature.cluster !== 'undefined' ) {
+					html += '<div id="div_result_title">At this location, you will find multiple <span id="span_result_title">(' + feature.cluster.length + ')</span> DOCLINE libraries</div><hr id="hr_min" />';
+					for ( var ii = 0; ii < feature.cluster.length; ii++ ) {
+						docline_libid = feature.cluster[ii].attributes["libid"];
+						docline_city = feature.cluster[ii].attributes["city"];
+						docline_state_code = feature.cluster[ii].attributes["state_code"];
+						docline_zip = feature.cluster[ii].attributes["zip"];
+						docline_county = feature.cluster[ii].attributes["county"];
+						docline_country_code = feature.cluster[ii].attributes["country_code"];
+						docline_region_code = feature.cluster[ii].attributes["region_code"];
+						html += '<div id="div_result"><mark id="mrk_id">' + docline_libid + '</mark>, ' + docline_city + ' ' + docline_state_code + ' ' + docline_zip + ' (' + docline_country_code +')' + '</div><hr id="hr_min" />';
+					}
+					html += '';
+				} else {
+					html += '<div id="div_result_title">At this location, you will find one Regional Medical Library</div><hr id="hr_min" />';
+					for ( var i in feature.attributes ) {
+						if ( i === 'libid' ) { arr_i.docline_libid = feature.attributes[i]; }
+						if ( i === 'city' ) { arr_i.docline_city = feature.attributes[i]; }
+						if ( i === 'state_code' ) { arr_i.docline_state_code = feature.attributes[i]; }
+						if ( i === 'zip' ) { arr_i.docline_zip = feature.attributes[i]; }
+						if ( i === 'county' ) { arr_i.docline_county = feature.attributes[i]; }
+						if ( i === 'country_code' ) { arr_i.docline_country_code = feature.attributes[i]; }
+						if ( i === 'region_code' ) { arr_i.docline_region_code = feature.attributes[i]; }
+					}
+					html += '<div id="div_result"><mark id="mrk_id">' + arr_i.docline_libid + '</mark>, ' + arr_i.docline_city + ' ' + arr_i.docline_state_code + ' ' + arr_i.docline_zip + ' (' + arr_i.docline_country_code +')' + '</div><hr id="hr_min" />';
+					html += '';
+				}
+				OpenLayers.Util.getElement('div_result_wfs').innerHTML = html.replace(/Ã¡/g, '&aacute;').replace(/Ã¤/g, '&auml;').replace(/Ã©/g, '&eacute;').replace(/Ã¨/g, '&egrave;').replace(/Ã³/g, '&oacute;').replace(/Ãº/g, '&uacute;').replace(/Ã¼/g, '&uuml;').replace(/Ã±/g, '&ntilde;').replace(/â€™/g, '\'').replace(/Ã/g, '&iacute;');
+			}
+		}
+		
+		function fct_clear_wfs(feature) {
+			OpenLayers.Util.getElement('div_result_wfs').innerHTML = '';
+		}
+		
+		function fct_result_wfs_geocode(feature) {
+			var html = '';
+			var arr_i = [];
+			
+			if ( typeof feature.cluster !== 'undefined' ) {
+				html += '<div id="div_result_title">At this location, you will find multiple <span id="span_result_title">(' + feature.cluster.length + ')</span> activities/projects</div><hr id="hr_min" />';
+				for ( var ii = 0; ii < feature.cluster.length; ii++ ) {
+					fk_form_id = feature.cluster[ii].attributes.fk_form_id;
+					county = feature.cluster[ii].attributes.county;
+					act_name = feature.cluster[ii].attributes.act_name;
+					zip_code_geom = feature.cluster[ii].attributes.zip_code_geom
+					html += '<div id="div_result">' + act_name + ' (ID: <mark id="mrk_id">' + fk_form_id + '</mark>), ' + county + ' County <a href="https://maps.google.com/maps?saddr=current+location&daddr=' + zip_code_geom + '" target="_blank">' + zip_code_geom + '</a></div><hr id="hr_min" />';
+				}
+				html += '';
+			} else {
+				html += '<div id="div_result_title">At this location, you will find one activity/project</div><hr id="hr_min" />';
+				for ( var i in feature.attributes ) {
+					if ( i === 'place' ) {
+						arr_i.place = feature.attributes[i];
+					}
+					if ( i === 'st' ) {
+						arr_i.st = feature.attributes[i];
+					}
+				}
+				html += '<a href="https://maps.google.com/maps?saddr=current+location&daddr=' + arr_i.place + '+' + arr_i.st + '" target="_blank">' + arr_i.place + ', ' + arr_i.st + '</a><hr id="hr_min" />';
+				html += '';
+			}
+			OpenLayers.Util.getElement('div_result_wfs').innerHTML = html.replace(/Ã¡/g, '&aacute;').replace(/Ã¤/g, '&auml;').replace(/Ã©/g, '&eacute;').replace(/Ã¨/g, '&egrave;').replace(/Ã³/g, '&oacute;').replace(/Ãº/g, '&uacute;').replace(/Ã¼/g, '&uuml;').replace(/Ã±/g, '&ntilde;').replace(/â€™/g, '\'').replace(/Ã/g, '&iacute;');
+		}
+		
+		function fct_result_wms(evt) {
+			if (evt.features && evt.features.length) {
+				highlightLayer.destroyFeatures();
+				highlightLayer.addFeatures(evt.features);
+				highlightLayer.redraw();
+			} else {
+				var html = evt.text;
+				document.getElementById('div_result_wms').innerHTML = html;
+			}
+		}
+		
+		function fct_log(msg) {}
+		
+		function fct_initialize ( search, date_from, date_to, multi_sess, act_in, sub, geocode, state ) {
+			nih_url = "&nih_search=" + search + "&nih_date_from=" + date_from + "&nih_date_to=" + date_to + "&nih_multi_sess=" + multi_sess + "&nih_act_in=" + act_in + "&nih_sub=" + sub + "&nih_geocode=" + geocode;
+			
+			function mapEvent(event) {}
+			
+			function mapBaseLayerChanged(event) {
+				var legend = '';
+				if (event.layer.name == 'Cancer Mortality, M (NationalMap)') {
+					legend = '<img src="http://webservices.nationalatlas.gov/wms?version=1.0.0&request=getlegendgraphic&layer=allcancer_1&format=image/png" />';
+				} else if (event.layer.name == 'Cancer Mortality, F (NationalMap)') {
+					legend = '<img src="http://webservices.nationalatlas.gov/wms?version=1.0.0&request=getlegendgraphic&layer=allcancer_2&format=image/png" />';
+				} else {
+					OpenLayers.Util.getElement('div_legend').innerHTML = '';
+				}
+				OpenLayers.Util.getElement('div_legend').innerHTML = legend;
+			}
+			
+			function mapLayerChanged(event) {}
+			
+			OpenLayers.IMAGE_RELOAD_ATTEMPTS = 2;
+			map1 = new OpenLayers.Map('div_map1', {
+				eventListeners: {
+					"moveend": mapEvent,
+					"zoomend": mapEvent,
+					"changelayer": mapLayerChanged,
+					"changebaselayer": mapBaseLayerChanged,
+				},
+				controls: [
+					new OpenLayers.Control.LayerSwitcher(),
+					new OpenLayers.Control.Navigation(),
+					new OpenLayers.Control.PinchZoom(),
+					new OpenLayers.Control.Zoom(),
+				],
+				projection: "EPSG:900913",
+				displayProjection: "EPSG:4326"
+			});
+			map1.getControlsByClass("OpenLayers.Control.LayerSwitcher")[0].baseLbl.innerHTML = 'BACKGROUND';
+			map1.getControlsByClass("OpenLayers.Control.LayerSwitcher")[0].dataLbl.innerHTML = 'OVERLAY';
+			nih_strategy_geo = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_rgn = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_docline = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_rml = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_act1 = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_act2 = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_act3 = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_act4 = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_act5 = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_act6 = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_act7 = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_act8 = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_prj1 = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_prj2 = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_prj3 = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_prj4 = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_prj5 = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_prj6 = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_prj7 = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_prj8 = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_hospital_heatmap = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_hospital_buffer = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_strategy_hospital = new OpenLayers.Strategy.Cluster({distance: 10, threshold: 2});
+			nih_style_rgn1 = new OpenLayers.StyleMap({
+				"default": new OpenLayers.Style({
+					strokeColor: "#f0f0f0",
+					strokeWidth: 2,
+					fillColor: "#0d3723",
+					title: "Region"
+				})
+			});
+			nih_style_rgn2 = new OpenLayers.StyleMap({
+				"default": new OpenLayers.Style({
+					strokeColor: "#f0f0f0",
+					strokeWidth: 2,
+					fillColor: "#627190",
+					title: "Region"
+				})
+			});
+			nih_style_rgn3 = new OpenLayers.StyleMap({
+				"default": new OpenLayers.Style({
+					strokeColor: "#f0f0f0",
+					strokeWidth: 2,
+					fillColor: "#4a65ac",
+					title: "Region"
+				})
+			});
+			nih_style_rgn4 = new OpenLayers.StyleMap({
+				"default": new OpenLayers.Style({
+					strokeColor: "#f0f0f0",
+					strokeWidth: 2,
+					fillColor: "#57325d",
+					title: "Region"
+				})
+			});
+			nih_style_rgn5 = new OpenLayers.StyleMap({
+				"default": new OpenLayers.Style({
+					strokeColor: "#f0f0f0",
+					strokeWidth: 2,
+					fillColor: "#481d14",
+					title: "Region"
+				})
+			});
+			nih_style_rgn6 = new OpenLayers.StyleMap({
+				"default": new OpenLayers.Style({
+					strokeColor: "#f0f0f0",
+					strokeWidth: 2,
+					fillColor: "#ac7233",
+					title: "Region"
+				})
+			});
+			nih_style_rgn7 = new OpenLayers.StyleMap({
+				"default": new OpenLayers.Style({
+					strokeColor: "#f0f0f0",
+					strokeWidth: 2,
+					fillColor: "#648452",
+					title: "Region"
+				})
+			});
+			nih_style_rgn8 = new OpenLayers.StyleMap({
+				"default": new OpenLayers.Style({
+					strokeColor: "#f0f0f0",
+					strokeWidth: 2,
+					fillColor: "#9c8d3c",
+					title: "Region"
+				})
+			});
+			nih_style_ntcoerc = new OpenLayers.StyleMap({
+				"default": new OpenLayers.Style({
+					strokeColor: "#ff0000",
+					strokeWidth: 2,
+					fillColor: "#ffffff",
+					title: "NTC/OERC"
+				})
+			});
+			nih_style_docline = new OpenLayers.StyleMap({
+				"default": new OpenLayers.Style({
+					strokeColor: "#005a9c",
+					strokeWidth: 3,
+					fillColor: "#ffffff",
+					pointRadius: 6,
+					title: "DOCLINE",
+					cursor: "pointer",
+					externalGraphic: "img/map/nomc/docline.20x20.png",
+					graphicWidth: 20
+				})
+			});
+			nih_style_rml = new OpenLayers.StyleMap({
+				"default": new OpenLayers.Style({
+					strokeColor: "#005a9c",
+					strokeWidth: 3,
+					fillColor: "#ffffff",
+					pointRadius: 6,
+					title: "RML",
+					cursor: "pointer",
+					externalGraphic: "img/map/nomc/rml.25x20.png",
+					graphicWidth: 20
+				})
+			});
+			nih_style_act = new OpenLayers.StyleMap({
+				"default": new OpenLayers.Style({
+					strokeColor: "#ff0000",
+					strokeWidth: 3,
+					fillColor: "#ffffff",
+					pointRadius: 6,
+					title: "Activity",
+					cursor: "pointer"
+				})
+			});
+			nih_style_prj = new OpenLayers.StyleMap({
+				"default": new OpenLayers.Style({
+					strokeColor: "#000000",
+					strokeWidth: 3,
+					fillColor: "#ffffff",
+					pointRadius: 6,
+					title: "Project",
+					cursor: "pointer"
+				})
+			});
+			nih_style_hospital_heatmap = new OpenLayers.StyleMap({
+				"default": new OpenLayers.Style({
+					strokeColor: "#ffc400",
+					strokeWidth: 10,
+					fillColor: "#ff8000",
+					pointRadius: 5,
+					title: "Hospital Coverage"
+				})
+			});
+			nih_style_hospital_buffer = new OpenLayers.StyleMap({
+				"default": new OpenLayers.Style({
+					strokeColor: "#ffc400",
+					strokeWidth: 10,
+					fillColor: "#ff8000",
+					pointRadius: 5,
+					title: "Hospital Coverage"
+				})
+			});
+			nih_style_hospital = new OpenLayers.StyleMap({
+				"default": new OpenLayers.Style({
+					strokeColor: "#005a9c",
+					strokeWidth: 3,
+					fillColor: "#ffffff",
+					pointRadius: 6,
+					title: "Hospital",
+					cursor: "pointer",
+					externalGraphic: "img/map/nomc/hospital.20x20.png",
+					graphicWidth: 20
+				})
+			});
+			nih_layer_01 = new OpenLayers.Layer.Vector("Geocode (User)",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_geo],
+					protocol: new OpenLayers.Protocol.WFS({
+						url: "/service/geocode.wfs?crs=crs:84" + nih_url,
+						featureType: "lyrgeocode"
+					}),
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_01.setVisibility(false);
+			nih_layer_02 = new OpenLayers.Layer.WMS("Activities By State", "/service/nomc.wms?crs=crs:84" + nih_url,
+				{
+					layers: "lyrstate",
+					transparent: "true",
+					format: "image/png"
+				}
+			);
+			nih_layer_rgn1 = new OpenLayers.Layer.Vector("Region 1 (MAR)",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_rgn],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrtbpgesristatesegeom",
+							outputformat: "geojson",
+							nih_region: "1",
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_rgn1,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_rgn1.setOpacity(0.50);
+			nih_layer_rgn1.setVisibility(true);
+			nih_layer_rgn2 = new OpenLayers.Layer.Vector("Region 2 (SEA)",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_rgn],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrtbpgesristatesegeom",
+							outputformat: "geojson",
+							nih_region: "2",
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_rgn2,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_rgn2.setOpacity(0.50);
+			nih_layer_rgn2.setVisibility(true);
+			nih_layer_rgn3 = new OpenLayers.Layer.Vector("Region 3 (GMR)",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_rgn],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrtbpgesristatesegeom",
+							outputformat: "geojson",
+							nih_region: "3",
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_rgn3,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_rgn3.setOpacity(0.50);
+			nih_layer_rgn3.setVisibility(true);
+			nih_layer_rgn4 = new OpenLayers.Layer.Vector("Region 4 (MCR)",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_rgn],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrtbpgesristatesegeom",
+							outputformat: "geojson",
+							nih_region: "4",
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_rgn4,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_rgn4.setOpacity(0.50);
+			nih_layer_rgn4.setVisibility(true);
+			nih_layer_rgn5 = new OpenLayers.Layer.Vector("Region 5 (SCR)",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_rgn],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrtbpgesristatesegeom",
+							outputformat: "geojson",
+							nih_region: "5",
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_rgn5,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_rgn5.setOpacity(0.50);
+			nih_layer_rgn5.setVisibility(true);
+			nih_layer_rgn6 = new OpenLayers.Layer.Vector("Region 6 (PNR)",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_rgn],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrtbpgesristatesegeom",
+							outputformat: "geojson",
+							nih_region: "6",
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_rgn6,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_rgn6.setOpacity(0.50);
+			nih_layer_rgn6.setVisibility(true);
+			nih_layer_rgn7 = new OpenLayers.Layer.Vector("Region 7 (PSR)",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_rgn],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrtbpgesristatesegeom",
+							outputformat: "geojson",
+							nih_region: "7",
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_rgn7,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_rgn7.setOpacity(0.50);
+			nih_layer_rgn7.setVisibility(true);
+			nih_layer_rgn8 = new OpenLayers.Layer.Vector("Region 8 (NER)",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_rgn],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrtbpgesristatesegeom",
+							outputformat: "geojson",
+							nih_region: "8",
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_rgn8,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_rgn8.setOpacity(0.50);
+			nih_layer_rgn8.setVisibility(true);
+			nih_layer_ntc = new OpenLayers.Layer.Vector("NTC",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_rgn],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrtbpgesristatesegeom",
+							outputformat: "geojson",
+							nih_region: "any('{1,2,3,4,5,6,7,8}')",
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_ntcoerc,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_ntc.setOpacity(0.50);
+			nih_layer_ntc.setVisibility(false);
+			nih_layer_oerc = new OpenLayers.Layer.Vector("OERC<br />",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_rgn],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrtbpgesristatesegeom",
+							outputformat: "geojson",
+							nih_region: "any('{1,2,3,4,5,6,7,8}')",
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_ntcoerc,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_oerc.setOpacity(0.50);
+			nih_layer_oerc.setVisibility(false);
+			nih_layer_act1 = new OpenLayers.Layer.Vector("Region 1 Activities",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_act1],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyractivitiessearchall",
+							outputformat: "geojson",
+							nih_state: "DE, NJ, NY, PA"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_act,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_act1.setOpacity(0.75);
+			nih_layer_act1.setVisibility(false);
+			nih_layer_act2 = new OpenLayers.Layer.Vector("Region 2 Activities",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_act2],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyractivitiessearchall",
+							outputformat: "geojson",
+							nih_state: "AL, FL, GA, MD, MS, NC, SC, TN, VA, WV, DC, PR, VI"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_act,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_act2.setOpacity(0.75);
+			nih_layer_act2.setVisibility(false);
+			nih_layer_act3 = new OpenLayers.Layer.Vector("Region 3 Activities",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_act3],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyractivitiessearchall",
+							outputformat: "geojson",
+							nih_state: "IA, IL, IN, KY, MI, MN, ND, OH, SD, WI"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_act,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_act3.setOpacity(0.75);
+			nih_layer_act3.setVisibility(false);
+			nih_layer_act4 = new OpenLayers.Layer.Vector("Region 4 Activities",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_act4],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyractivitiessearchall",
+							outputformat: "geojson",
+							nih_state: "CO, KS, MO, NE, UT, WY"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_act,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_act4.setOpacity(0.75);
+			nih_layer_act4.setVisibility(false);
+			nih_layer_act5 = new OpenLayers.Layer.Vector("Region 5 Activities",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_act5],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyractivitiessearchall",
+							outputformat: "geojson",
+							nih_state: "AR, LA, NM, OK, TX"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_act,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_act5.setOpacity(0.75);
+			nih_layer_act5.setVisibility(false);
+			nih_layer_act6 = new OpenLayers.Layer.Vector("Region 6 Activities",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_act6],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyractivitiessearchall",
+							outputformat: "geojson",
+							nih_state: "AK, ID, MT, OR, WA"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_act,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_act6.setOpacity(0.75);
+			nih_layer_act6.setVisibility(false);
+			nih_layer_act7 = new OpenLayers.Layer.Vector("Region 7 Activities",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_act7],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyractivitiessearchall",
+							outputformat: "geojson",
+							nih_state: "AZ, CA, HI, NV, AF, AS, AP, AE, AA, FM, GU, MH, MP, PW"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_act,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_act7.setOpacity(0.75);
+			nih_layer_act7.setVisibility(false);
+			nih_layer_act8 = new OpenLayers.Layer.Vector("Region 8 Activities<br />",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_act8],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyractivitiessearchall",
+							outputformat: "geojson",
+							nih_state: "CT, MA, ME, NH, RI, VT"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_act,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_act8.setOpacity(0.75);
+			nih_layer_act8.setVisibility(false);
+			nih_layer_prj1 = new OpenLayers.Layer.Vector("Region 1 Projects",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_prj1],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrprojectssearchall",
+							outputformat: "geojson",
+							nih_state: "DE, NJ, NY, PA"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_prj,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_prj1.setOpacity(0.75);
+			nih_layer_prj1.setVisibility(false);
+			nih_layer_prj2 = new OpenLayers.Layer.Vector("Region 2 Projects",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_prj2],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrprojectssearchall",
+							outputformat: "geojson",
+							nih_state: "AL, FL, GA, MD, MS, NC, SC, TN, VA, WV, DC, PR, VI"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_prj,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_prj2.setOpacity(0.75);
+			nih_layer_prj2.setVisibility(false);
+			nih_layer_prj3 = new OpenLayers.Layer.Vector("Region 3 Projects",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_prj3],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrprojectssearchall",
+							outputformat: "geojson",
+							nih_state: "IA, IL, IN, KY, MI, MN, ND, OH, SD, WI"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_prj,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_prj3.setOpacity(0.75);
+			nih_layer_prj3.setVisibility(false);
+			nih_layer_prj4 = new OpenLayers.Layer.Vector("Region 4 Projects",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_prj4],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrprojectssearchall",
+							outputformat: "geojson",
+							nih_state: "CO, KS, MO, NE, UT, WY"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_prj,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_prj4.setOpacity(0.75);
+			nih_layer_prj4.setVisibility(false);
+			nih_layer_prj5 = new OpenLayers.Layer.Vector("Region 5 Projects",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_prj5],
+					protocol: new OpenLayers.Protocol.HTTP({
+					url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrprojectssearchall",
+							outputformat: "geojson",
+							nih_state: "AR, LA, NM, OK, TX"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_prj,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_prj5.setOpacity(0.75);
+			nih_layer_prj5.setVisibility(false);
+			nih_layer_prj6 = new OpenLayers.Layer.Vector("Region 6 Projects",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_prj6],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrprojectssearchall",
+							outputformat: "geojson",
+							nih_state: "AK, ID, MT, OR, WA"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_prj,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_prj6.setOpacity(0.75);
+			nih_layer_prj6.setVisibility(false);
+			nih_layer_prj7 = new OpenLayers.Layer.Vector("Region 7 Projects",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_prj7],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrprojectssearchall",
+							outputformat: "geojson",
+							nih_state: "AZ, CA, HI, NV, AF, AS, AP, AE, AA, FM, GU, MH, MP, PW"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_prj,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_prj7.setOpacity(0.75);
+			nih_layer_prj7.setVisibility(false);
+			nih_layer_prj8 = new OpenLayers.Layer.Vector("Region 8 Projects<br />",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_prj8],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrprojectssearchall",
+							outputformat: "geojson",
+							nih_state: "CT, MA, ME, NH, RI, VT"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_prj,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_prj8.setOpacity(0.75);
+			nih_layer_prj8.setVisibility(false);
+			nih_layer_docline = new OpenLayers.Layer.Vector("DOCLINE",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_docline],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "/service/nomc.wfs?crs=crs:84" + nih_url,
+						params: {
+							service: "wfs",
+							version: "1.1.0",
+							request: "getfeature",
+							typename: "lyrdocline",
+							outputformat: "geojson"
+						},
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_docline,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_docline.setOpacity(0.50);
+			nih_layer_docline.setVisibility(false);
+			nih_layer_rml = new OpenLayers.Layer.Vector("RMLs<br />",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_rml],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "data/point/rml.json",
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_rml,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			nih_layer_rml.setOpacity(0.75);
+			nih_layer_rml.setVisibility(true);
+			var layer_01 = new OpenLayers.Layer.ArcGIS93Rest("Counties (NationalMap)",
+				"http://services.nationalmap.gov/arcgis/rest/services/govunits/MapServer/export",
+				{ layers: "show:3,13" },
+				{ isBaseLayer: false }
+			);
+			layer_01.setOpacity(0.50);
+			layer_01.setVisibility(false);
+			var layer_02 = new OpenLayers.Layer.ArcGIS93Rest("Congressional Districts (NationalMap)",
+				"http://services.nationalmap.gov/arcgis/rest/services/govunits/MapServer/export",
+				{ layers: "show:9,19" },
+				{ isBaseLayer: false }
+			);
+			layer_02.setOpacity(0.50);
+			layer_02.setVisibility(false);
+			var layer_03 = new OpenLayers.Layer.ArcGIS93Rest("States (NationalMap)",
+				"http://services.nationalmap.gov/arcgis/rest/services/govunits/MapServer/export",
+				{ layers: "show:7,8,17,18" },
+				{ isBaseLayer: false }
+			);
+			layer_03.setOpacity(0.50);
+			layer_03.setVisibility(false);
+			var layer_05 = new OpenLayers.Layer.WMS("Population (Columbia)",
+				"http://sedac.ciesin.columbia.edu/geoserver/wms",
+				{ layers: "gpw-v3:gpw-v3-population-density-future-estimates_2015"},
+				{ isBaseLayer: false }
+			);
+			layer_05.setOpacity(0.50);
+			layer_05.setVisibility(true);
+			var layer_13 = new OpenLayers.Layer.WMS("Hurricane Mortality Risk (Columbia)",
+				"http://sedac.ciesin.columbia.edu/geoserver/wms",
+				{ layers: "ndh:ndh-cyclone-mortality-risks-distribution"},
+				{ isBaseLayer: false }
+			);
+			layer_13.setOpacity(0.50);
+			layer_13.setVisibility(false);
+			var layer_09 = new OpenLayers.Layer.ArcGIS93Rest("School (Census)",
+				"http://tigerweb.geo.census.gov/arcgis/rest/services/Census2010/School/MapServer/export",
+				{ layers: "show:0" },
+				{ isBaseLayer: false }
+			);
+			layer_09.setOpacity(0.50);
+			layer_09.setVisibility(false);
+			var layer_10 = new OpenLayers.Layer.ArcGIS93Rest("School Districts (Census)",
+				"http://tigerweb.geo.census.gov/arcgis/rest/services/Census2010/Labels/MapServer/export",
+				{ layers: "show:14" },
+				{ isBaseLayer: false }
+			);
+			layer_10.setOpacity(0.50);
+			layer_10.setVisibility(false);
+			layer_11 = new OpenLayers.Layer.Vector("Hospital Coverage",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_hospital_buffer],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "data/point/hospital_general_information.buffer.small.dissolve.json",
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_hospital_buffer,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			layer_11.setOpacity(0.50);
+			layer_11.setVisibility(true);
+			layer_12 = new OpenLayers.Layer.Vector("Hospitals (CMS)",
+				{
+					strategies: [new OpenLayers.Strategy.BBOX(), nih_strategy_hospital],
+					protocol: new OpenLayers.Protocol.HTTP({
+						url: "data/point/hospital_general_information.json",
+						format: new OpenLayers.Format.GeoJSON()
+					}),
+					styleMap: nih_style_hospital,
+					projection: new OpenLayers.Projection("EPSG:4326")
+				}
+			);
+			layer_12.setOpacity(0.75);
+			layer_12.setVisibility(true);
+			/*
+			var nih_map, longitude = -98.35, latitude = 39.50, zoom = 4;
+			nih_map = new google.maps.Map(document.getElementById('div_map'), {
+				center: new google.maps.LatLng(latitude, longitude),
+				zoom: zoom,
+				mapTypeId: google.maps.MapTypeId.ROADMAP,
+			});
+			var nih_kml = new google.maps.KmlLayer({
+				url: 'https://download.nlm.nih.gov/gis/services/map/exhibit/kml/doc.kmz',
+				map: nih_map,
+				preserveViewport: true,
+			});
+			*/
+			var layer_commercial_03_2 = new OpenLayers.Layer.Google(
+				"Streets (Google)",
+				{
+					type: google.maps.MapTypeId.ROADMAP,
+					numZoomLevels: 20
+				}
+			);
+			var layer_commercial_03_3 = new OpenLayers.Layer.Google(
+				"Hybrid (Google)",
+				{
+					type: google.maps.MapTypeId.HYBRID,
+					numZoomLevels: 20
+				}
+			);
+			var layer_locate_me = new OpenLayers.Layer.Vector('Locate Me',
+				{
+					displayInLayerSwitcher: false
+				}
+			);
+			map1.addLayers([layer_locate_me]);
+			var geolocate = new OpenLayers.Control.Geolocate({
+				bind: false,
+				geolocationOptions: {
+					enableHighAccuracy: false,
+					maximumAge: 0,
+					timeout: 7000
+				}
+			});
+			map1.addControl(geolocate);
+			document.getElementById('but_locate').onclick = function() {
+				layer_locate_me.removeAllFeatures();
+				geolocate.deactivate();
+				geolocate.watch = false;
+				firstGeolocation = true;
+				geolocate.activate();
+			};
+			var style = {
+				fillOpacity: 0.5,
+				externalGraphic: "img/map/nomc/nlm.logo.small.png"
+			};
+			var pulsate = function(feature) {
+				var point = feature.geometry.getCentroid(),
+				bounds = feature.geometry.getBounds(),
+				radius = Math.abs((bounds.right - bounds.left)/2),
+				count = 0,
+				grow = 'up';
+				var resize = function() {
+					if (count>16) {
+						clearInterval(window.resizeInterval);
+					}
+					var interval = radius * 0.03;
+					var ratio = interval/radius;
+					switch(count) {
+						case 4:
+						case 12:
+							grow = 'down';
+							break;
+						case 8:
+							grow = 'up';
+							break;
+					}
+					if (grow!=='up') {
+						ratio = - Math.abs(ratio);
+					}
+					feature.geometry.resize(1+ratio, point);
+					layer_locate_me.drawFeature(feature);
+					count++;
+				};
+				window.resizeInterval = window.setInterval(resize, 2000, point, radius);
+			};
+			navigator.geolocation.getCurrentPosition( fct_position );
+			function fct_position( position ) {
+				var x = position.coords.latitude;
+				var y = position.coords.longitude;
+			}
+			geolocate.events.register("locationupdated",geolocate,function(e) {
+				layer_locate_me.removeAllFeatures();
+				var circle = new OpenLayers.Feature.Vector(
+					OpenLayers.Geometry.Polygon.createRegularPolygon(
+						new OpenLayers.Geometry.Point(e.point.x, e.point.y),
+						e.position.coords.accuracy/2,
+						20,
+						0
+					),
+					{},
+					style
+				);
+				layer_locate_me.addFeatures([
+					new OpenLayers.Feature.Vector(
+						e.point,
+						{},
+						{
+							fillOpacity: 0,
+							externalGraphic: "img/map/nomc/nlm.logo.small.png"
+						}
+					),
+					circle
+				]);
+				if (firstGeolocation) {
+					map1.zoomToExtent(layer_locate_me.getDataExtent());
+					firstGeolocation = false;
+					this.bind = true;
+				}
+			});
+			map1.events.register("zoomend", this, function (e) {
+				if ( document.readyState === "complete" ) {
+					OpenLayers.Util.getElement('div_result_wfs').innerHTML = '<div id="div_result_title">Click on the Layers list <img src="img/layer-switcher-maximize.png" /> to add data to the map. Also, drag the map to explore areas of interest.</div>';
+				} else {
+					OpenLayers.Util.getElement('div_result_wfs').innerHTML = '';
+				}
+			});
+			var query_wfs_geocode = new OpenLayers.Control.SelectFeature(nih_layer_01,
+				{
+					callbacks: { 'click': fct_result_wfs_geocode }
+				}
+			);
+			var query_wfs = new OpenLayers.Control.SelectFeature(
+				[layer_11, layer_12, nih_layer_act1, nih_layer_act2, nih_layer_act3, nih_layer_act4, nih_layer_act5, nih_layer_act6, nih_layer_act7, nih_layer_act8, nih_layer_prj1, nih_layer_prj2, nih_layer_prj3, nih_layer_prj4, nih_layer_prj5, nih_layer_prj6, nih_layer_prj7, nih_layer_prj8, nih_layer_docline, nih_layer_rml],
+				{
+					multipleKey: "shiftKey",
+					toggle: true,
+					hover: false,
+					onSelect: fct_result_wfs,
+ 					onUnselect: fct_clear_wfs,
+					eventListeners: {},
+					callbacks: {},
+					selectStyle: {
+						strokeColor: "#ffffff",
+						strokeWidth: 4,
+						fillColor: "#ffff00",
+						fillOpacity: 1.0,
+						pointRadius: 8,
+						cursor: "pointer",
+						title: "Selection",
+					},
+				}
+			);
+			var query_wms = {
+				click: new OpenLayers.Control.WMSGetFeatureInfo({
+					layers: [nih_layer_01],
+					queryVisible: true,
+				})
+			};
+			for (var i in query_wms) { 
+				query_wms[i].events.register("getfeatureinfo", this, fct_result_wms);
+				map1.addControl(query_wms[i]);
+			}
+			map1.addControl(query_wfs);
+			map1.addControl(query_wfs_geocode);
+			map1.addLayers([nih_layer_rgn1, nih_layer_rgn2, nih_layer_rgn3, nih_layer_rgn4, nih_layer_rgn5, nih_layer_rgn6, nih_layer_rgn7, nih_layer_rgn8, nih_layer_ntc, nih_layer_oerc, layer_01, layer_02, layer_03, layer_05, layer_13, layer_10, layer_11, layer_12, layer_commercial_03_2, layer_commercial_03_3, nih_layer_act1, nih_layer_act2, nih_layer_act3, nih_layer_act4, nih_layer_act5, nih_layer_act6, nih_layer_act7, nih_layer_act8, nih_layer_prj1, nih_layer_prj2, nih_layer_prj3, nih_layer_prj4, nih_layer_prj5, nih_layer_prj6, nih_layer_prj7, nih_layer_prj8, nih_layer_docline, nih_layer_rml]);
+				map1.setLayerIndex(layer_commercial_03_2, 102);
+				map1.setLayerIndex(layer_commercial_03_3, 103);
+			map1.setLayerIndex(layer_03, 201);
+			map1.setLayerIndex(layer_01, 202);
+			map1.setLayerIndex(layer_02, 203);
+			map1.setLayerIndex(layer_05, 204);
+			map1.setLayerIndex(layer_13, 205);
+			map1.setLayerIndex(layer_10, 206);
+			map1.setLayerIndex(layer_11, 207);
+			map1.setLayerIndex(layer_12, 208);
+			map1.setLayerIndex(nih_layer_docline, 209);
+			map1.setLayerIndex(nih_layer_rml, 210);
+				map1.setLayerIndex(nih_layer_rgn1, 401);
+				map1.setLayerIndex(nih_layer_rgn2, 402);
+				map1.setLayerIndex(nih_layer_rgn3, 403);
+				map1.setLayerIndex(nih_layer_rgn4, 404);
+				map1.setLayerIndex(nih_layer_rgn5, 405);
+				map1.setLayerIndex(nih_layer_rgn6, 406);
+				map1.setLayerIndex(nih_layer_rgn7, 407);
+				map1.setLayerIndex(nih_layer_rgn8, 408);
+				map1.setLayerIndex(nih_layer_ntc, 409);
+				map1.setLayerIndex(nih_layer_oerc, 410);
+			map1.setLayerIndex(nih_layer_act1, 501);
+			map1.setLayerIndex(nih_layer_act2, 502);
+			map1.setLayerIndex(nih_layer_act3, 503);
+			map1.setLayerIndex(nih_layer_act4, 504);
+			map1.setLayerIndex(nih_layer_act5, 505);
+			map1.setLayerIndex(nih_layer_act6, 506);
+			map1.setLayerIndex(nih_layer_act7, 507);
+			map1.setLayerIndex(nih_layer_act8, 508);
+				map1.setLayerIndex(nih_layer_prj1, 601);
+				map1.setLayerIndex(nih_layer_prj2, 602);
+				map1.setLayerIndex(nih_layer_prj3, 603);
+				map1.setLayerIndex(nih_layer_prj4, 604);
+				map1.setLayerIndex(nih_layer_prj5, 605);
+				map1.setLayerIndex(nih_layer_prj6, 606);
+				map1.setLayerIndex(nih_layer_prj7, 607);
+				map1.setLayerIndex(nih_layer_prj8, 608);
+			map1.setCenter(new OpenLayers.LonLat(-98.0, 39.0).transform(map1.displayProjection, map1.projection), 3.5);query_wfs.activate();
+			query_wfs_geocode.activate();
+			query_wms.click.activate();
+			var drawControls;
+		}
+	</script>
+	<!-- <link rel="import" href="webtrends.html" /> -->
+</head>
+<body onload="fct_initialize('', '01-oct-12', '30-sep-14', '', '', '', 'false');">
+	<div align="center" style="font-family: 'Open Sans', sans-serif; font-size: 30px; background-color: rgb(112, 112, 157);">
+		<span><a href="https://www.nnlm.gov/" style="font-weight: bold; color: rgb(51, 51, 102); text-decoration: none;">NATIONAL NETWORK OF Libraries <i>of</i> Medicine</a></span> <span style="font-weight: bold; color: rgb(172, 172, 171);">(NN/LM)</span>
+		<br />
+		<span><a href="#" style="font-family: Ultra; color: rgb(255, 255, 255); text-decoration: none;">OUTREACH MAPPING</a> (2015)</span>
+ 		<br />
+		<a href="#rgn1/" style="color: rgb(51, 51, 102); text-decoration: none;"><button>Region 1 (MAR)</button></a>
+		<a href="#rgn2/" style="color: rgb(51, 51, 102); text-decoration: none;"><button>Region 2 (SEA)</button></a>
+		<a href="#rgn3/" style="color: rgb(51, 51, 102); text-decoration: none;"><button>Region 3 (GMR)</button></a>
+		<a href="#rgn4/" style="color: rgb(51, 51, 102); text-decoration: none;"><button>Region 4 (MCR)</button></a>
+		<a href="#rgn5/" style="color: rgb(51, 51, 102); text-decoration: none;"><button>Region 5 (SCR)</button></a>
+		<a href="#rgn6/" style="color: rgb(51, 51, 102); text-decoration: none;"><button>Region 6 (PNR)</button></a>
+		<a href="#rgn7/" style="color: rgb(51, 51, 102); text-decoration: none;"><button>Region 7 (PSR)</button></a>
+		<a href="#rgn8/" style="color: rgb(51, 51, 102); text-decoration: none;"><button>Region 8 (NER)</button></a>
+		<a href="#ntc/" style="color: rgb(51, 51, 102); text-decoration: none;"><button>NTC</button></a>
+		<a href="#oerc/" style="color: rgb(51, 51, 102); text-decoration: none;"><button>OERC</button></a>
+	</div>
+				<table style="width: 100%; height: 100%;">
+		<tr style="width: 100%; height: 100%;">
+	<td style="width: 50%; height: 100%;">
+		<div id="div_map1" style="width: 100%; height: 100%;"></div>
+	</td>
+	<td style="width: 20%; height: 100%;">
+		<div id="div_sidebar_right" style="width: 100%; height: 100%;">
+			<div id="div_result_wfs" style="min-height: 50%; max-height: 50%;"></div>
+			<hr id="hr_max" />
+			<div id="div_result_other" style="min-height: 20%; max-height: 20%;">
+				<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+				<script>
+					$(function fct_census() {
+						function fct_number_comma( i ) {
+							return i.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+						}
+						jQuery.support.cors = true;
+						$("#but_census").click(function fct_census_button() {
+							if ( $("#c_fips").val() != "" ) {
+								params = "&for=county:" + $("#c_fips").val() + "&in=state:" + $("#s_fips").val();
+							} else {
+								params = "&for=state:" + $("#s_fips").val();
+							}
+							$.ajax({
+								type: 'GET',
+								url: "https://api.census.gov/data/2013/acs5?key=a6b7c26673058c03c953599484af02c7d371f4eb" + params + "&get=NAME,B01001_001E,B27020_002E",
+								success: function fct_census_response( response ) {
+									var values = response[ 1 ];
+									var name   = values[ 0 ];
+									var pop	= fct_number_comma( values[ 1 ] );
+									var health_ins_native   = fct_number_comma( values[ 2 ] );
+									var health_ins_native_per  = ((values[ 2 ] / values[ 1 ]) * 100).toFixed(0);
+									if ( values.length === 3 ) {
+										$("#state-name").text( name );
+									} else {
+										$("#county-name").text( name );
+										$("#pop").text( pop );
+										$("#health_ins_native").text( health_ins_native );
+										$("#health_ins_native_per").text( health_ins_native_per );
+									}
+								},
+								error: function fct_census_error( responseData, textStatus, errorThrown ) {
+									alert('GET failed.');
+								}
+							});
+						});
+					});
+				</script>
+				State:
+				<select id="s_fips">
+					<option value="01">Alabama</option>
+					<option value="02">Alaska</option>
+					<option value="04">Arizona</option>
+					<option value="05">Arkansas</option>
+					<option value="06">California</option>
+					<option value="08">Colorado</option>
+					<option value="09">Connecticut</option>
+					<option value="10">Delaware</option>
+					<option value="11">District Of Columbia</option>
+					<option value="12">Florida</option>
+					<option value="13">Georgia</option>
+					<option value="15">Hawaii</option>
+					<option value="16">Idaho</option>
+					<option value="17">Illinois</option>
+					<option value="18">Indiana</option>
+					<option value="19">Iowa</option>
+					<option value="20">Kansas</option>
+					<option value="21">Kentucky</option>
+					<option value="22">Louisiana</option>
+					<option value="23">Maine</option>
+					<option value="24">Maryland</option>
+					<option value="25">Massachusetts</option>
+					<option value="26">Michigan</option>
+					<option value="27">Minnesota</option>
+					<option value="28">Mississippi</option>
+					<option value="29">Missouri</option>
+					<option value="30">Montana</option>
+					<option value="31">Nebraska</option>
+					<option value="32">Nevada</option>
+					<option value="33">New Hampshire</option>
+					<option value="34">New Jersey</option>
+					<option value="35">New Mexico</option>
+					<option value="36">New York</option>
+					<option value="37">North Carolina</option>
+					<option value="38">North Dakota</option>
+					<option value="39">Ohio</option>
+					<option value="40">Oklahoma</option>
+					<option value="41">Oregon</option>
+					<option value="42">Pennsylvania</option>
+					<option value="44">Rhode Island</option>
+					<option value="45">South Carolina</option>
+					<option value="46">South Dakota</option>
+					<option value="47">Tennessee</option>
+					<option value="48">Texas</option>
+					<option value="49">Utah</option>
+					<option value="50">Vermont</option>
+					<option value="51">Virginia</option>
+					<option value="53">Washington</option>
+					<option value="54">West Virginia</option>
+					<option value="55">Wisconsin</option>
+					<option value="56">Wyoming</option>
+					<option value="60">American Samoa</option>
+					<option value="66">Guam</option>
+					<option value="MP">Northern Mariana Islands</option>
+					<option value="72">Puerto Rico</option>
+					<option value="UM">United States Minor Outlying Islands</option>
+					<option value="78">Virgin Islands</option>
+					<option value="AA">Armed Forces Americas</option>
+					<option value="AP">Armed Forces Pacific</option>
+					<option value="AE">Armed Forces Others</option>
+				</select>
+				<br />
+				<a href="https://www.census.gov/geo/reference/codes/cou.html" target="_blank">County FIPS</a>: <input type="text" id="c_fips" maxlength="3" size="4" style="width: 30px;" /> (optional)
+				<br />
+				<button id="but_census">Search Census</button> (<a href="http://www.census.gov/easystats/application/" target="_blank">more</a>)
+				<br /><br />
+ 				Name: <span id="county-name"></span>
+				<br />
+				Population: <span id="pop"></span>
+				<br />
+				Health Insurance Coverage: <mark id="mrk_id"><span id="health_ins_native_per"></span>%</mark>
+				<br />
+			</div>
+			<hr id="hr_max"/>
+			<div id="div_result_other" style="min-height: 15%; max-height: 15%;">
+				<div id="div_result_wms">
+					<button id="but_locate" >Locate Me</button>
+					<br />
+					<small>
+						&bull; Download: Activities <a href="/service/nomc.wfs?service=wfs&version=1.1.0&request=getfeature&typename=lyractivitiessearchall&nih_state=%25&outputformat=kml"><img src="img/map/icon/googleearth.png" alt="Google Earth (KML)" title="Google Earth (KML)" /></a> <a href="/service/nomc.wfs?service=wfs&version=1.1.0&request=getfeature&typename=lyractivitiessearchall&nih_state=%25&outputformat=csv"><img src="img/map/icon/xls.gif" alt="Excel (CSV)" title="Excel (CSV)" /></a>, Projects <a href="/service/nomc.wfs?service=wfs&version=1.1.0&request=getfeature&typename=lyrprojectssearchall&nih_state=%25&outputformat=kml"><img src="img/map/icon/googleearth.png" alt="Google Earth (KML)" title="Google Earth (KML)" /></a> <a href="/service/nomc.wfs?service=wfs&version=1.1.0&request=getfeature&typename=lyrprojectssearchall&nih_state=%25&outputformat=csv"><img src="img/map/icon/xls.gif" alt="Excel (CSV)" title="Excel (CSV)" /></a>
+						<br />
+						<div id="div_embed" class="embed" style="display: none;">
+							<small>
+								<a style="position: absolute; left: 0%; top: 0%;" href="#" onclick="document.getElementById('div_embed').style.display='none';">Close</a>
+								<br />
+								&lt;!--*** map ***--&gt;
+								&lt;style&gt;
+									iframe.map {
+										width: 900px;
+										height: 1200px;
+										border: none;
+										margin: 0px;
+										padding: 0px;
+										display: block;
+									}
+								&lt;/style&gt;
+								&lt;iframe class="map" src="https://gis.nlm.nih.gov/services/map/nomc/where/rgn1/embed/" frameborder="0px" scrolling="no"&gt;&lt;/iframe&gt;
+								&lt;!--*** map ***--&gt;
+								<br />
+								For help, contact Harsh Prakash at <a href="mailto:prakashh@mail.nih.gov?subject=NOMC">prakashh@mail.nih.gov</a>
+							</small>
+						</div>
+						&bull; <a href="#" onclick="document.getElementById('div_embed').style.display='';">Embed Code</a>
+						<br />
+						&bull; Source: NIH, CDC, CMS, HRSA, Census Bureau, USGS, WHO, Columbia, ESRI, Google
+					</small>
+				</div>
+			</div>
+			<div id="div_legend" style="width: 100%; height: 0%;"></div>
+			<div id="div_opacity" style="width: 100%; height: 0%;"></div>
+		</div>
+	</td>
+		</tr>
+		<tr>
+	<td>
+		<small>U.S. National Library of Medicine, 8600 Rockville Pike, Bethesda, MD 20894</small>
+	</td>
+		</tr>
+			</table>
+</body>
+  </html>

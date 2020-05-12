@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<SceneGraph version="1">
+  <AspectRatio>1.68421052631579</AspectRatio>
+  <BackgroundColor>000000</BackgroundColor>
+  <SceneNode>
+    <FileName>c:\npds\apps\deepzoom\project\visiblehuman\visiblehuman\Source Images\a_vm1125.png</FileName>
+    <x>0</x>
+    <y>0</y>
+    <Width>1</Width>
+    <Height>1</Height>
+    <ZOrder>1</ZOrder>
+  </SceneNode>
+  <SceneNode>
+    <FileName>c:\npds\apps\deepzoom\project\visiblehuman\visiblehuman\Source Images\a_vm1450.png</FileName>
+    <x>0.136897215172836</x>
+    <y>0.136897215172837</y>
+    <Width>0.726205569654326</Width>
+    <Height>0.726205569654327</Height>
+    <ZOrder>2</ZOrder>
+  </SceneNode>
+  <SceneNode>
+    <FileName>c:\npds\apps\deepzoom\project\visiblehuman\visiblehuman\Source Images\a_vm1675.png</FileName>
+    <x>0.251428649786463</x>
+    <y>0.251428649786462</y>
+    <Width>0.497142700427074</Width>
+    <Height>0.497142700427074</Height>
+    <ZOrder>3</ZOrder>
+  </SceneNode>
+  <SceneNode>
+    <FileName>c:\npds\apps\deepzoom\project\visiblehuman\visiblehuman\Source Images\a_vm1950.png</FileName>
+    <x>0.363537124839508</x>
+    <y>0.363537124839508</y>
+    <Width>0.272925750320985</Width>
+    <Height>0.272925750320985</Height>
+    <ZOrder>4</ZOrder>
+  </SceneNode>
+  <SceneNode>
+    <FileName>c:\npds\apps\deepzoom\project\visiblehuman\visiblehuman\Source Images\a_vm2300.png</FileName>
+    <x>0.421936662966337</x>
+    <y>0.421936662966338</y>
+    <Width>0.156126674067327</Width>
+    <Height>0.156126674067326</Height>
+    <ZOrder>5</ZOrder>
+  </SceneNode>
+  <SceneNode>
+    <FileName>c:\npds\apps\deepzoom\project\visiblehuman\visiblehuman\Source Images\a_vm2825.png</FileName>
+    <x>0.464276328108288</x>
+    <y>0.464276328108288</y>
+    <Width>0.0714473437834222</Width>
+    <Height>0.0714473437834228</Height>
+    <ZOrder>6</ZOrder>
+  </SceneNode>
+</SceneGraph>

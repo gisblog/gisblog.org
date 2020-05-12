@@ -1,0 +1,77 @@
+{
+	"autotag": [
+		{
+			"name": "Crowd",
+			"confidence": 99.961242675781
+		},
+		{
+			"name": "Person",
+			"confidence": 99.961242675781
+		},
+		{
+			"name": "Human",
+			"confidence": 99.961242675781
+		},
+		{
+			"name": "Audience",
+			"confidence": 99.961242675781
+		},
+		{
+			"name": "Speech",
+			"confidence": 99.317817687988
+		},
+		{
+			"name": "Lighting",
+			"confidence": 90.318016052246
+		},
+		{
+			"name": "Lecture",
+			"confidence": 67.770896911621
+		},
+		{
+			"name": "Debate",
+			"confidence": 66.88761138916
+		},
+		{
+			"name": "Apparel",
+			"confidence": 57.719673156738
+		},
+		{
+			"name": "Coat",
+			"confidence": 57.719673156738
+		},
+		{
+			"name": "Clothing",
+			"confidence": 57.719673156738
+		},
+		{
+			"name": "Blazer",
+			"confidence": 57.719673156738
+		},
+		{
+			"name": "Jacket",
+			"confidence": 57.719673156738
+		},
+		{
+			"name": "Purple",
+			"confidence": 57.379287719727
+		},
+		{
+			"name": "Word",
+			"confidence": 57.247081756592
+		},
+		{
+			"name": "Sitting",
+			"confidence": 56.711429595947
+		},
+		{
+			"name": "Duet",
+			"confidence": 56.100250244141
+		},
+		{
+			"name": "Head",
+			"confidence": 55.225971221924
+		},
+		{}
+	]
+}

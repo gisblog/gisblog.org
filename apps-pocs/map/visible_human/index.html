@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+	<html>
+<head>
+	<meta name="DC.Title" content="National Library of Medicine - National Institutes of Health" />
+	<meta name="DC.Publisher" content="U.S. National Library of Medicine" />
+	<meta name="citation_authors" content="Harsh Prakash" />
+	<meta name="NLM.Contact.Email" content="prakashh@mail.nih.gov" />
+	<title>NIH/NLM/OCCS/GIS: Supporting Mapping Information Needs</title>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<style>
+		body {
+			margin: 0px;
+			font-family: Verdana;
+			line-height: 1.25em;
+			padding: 10px;
+		}
+		#content {
+			width: 600px;
+			margin-left: 10px;
+		}
+		h1 {
+			font-size: large;
+			font-weight: normal;
+			display: inline-block;
+			background-color: #f0f0f0;
+		}
+		h1 strong {
+			font-weight: bold;
+		}
+		h2 {
+			font-size: small;
+			font-weight: bold;
+		}
+		a {
+			text-decoration: none;
+		}
+		p {
+			font-size: small;
+			background-color: #faf8b6;
+			border: 1px solid #f5f270;
+			padding: 10px;
+		}
+		p a {
+			color: #444304;
+			background-color: #F5F270;
+			font-weight: bold;
+		}
+		ul {
+			font-size: small;
+		}
+		ul a {
+			color: #253649;
+			background-color: #F0F0F0;
+		}
+		#container {
+			width: auto;
+			height: 400px;
+			background-color: black;
+			border: 1px solid black;
+			color: white; /* for errors */
+		}
+	</style>
+	<script src="scr/dz.js"></script>
+	<script>
+		/***
+		Seadragon Ajax tutorials:
+		http://seadragon.com/ajax/
+		
+		Seadragon Ajax API reference:
+		http://seadragon.com/ajax/0.8/doc/
+		
+		Seadragon Ajax community support:
+		http://getsatisfaction.com/livelabs/products/livelabs_seadragon_ajax/
+		***/
+		var viewer;
+		function init() {
+			viewer = new Seadragon.Viewer("container");
+			viewer.openDzi("GeneratedImages/dzc_output.xml");
+		}
+		Seadragon.Utils.addEvent(window, "load", init);
+	</script>
+</head>
+<body>
+	<h1>Mapping Visible Human</h1> (2015)
+	<br />
+	Data from the Visible Human Project, an effort to create a detailed data set of cross-sectional photographs of the human body, in order to facilitate anatomy visualization applications. See "#HealthGIS: Notable links and final thoughts on the conference" at <a href="http://gisblog.org">gisblog.org</a>.
+	<br /><br />
+	<div id="content">
+		<div id="container"></div>
+	</div>
+</body>
+	</html>
