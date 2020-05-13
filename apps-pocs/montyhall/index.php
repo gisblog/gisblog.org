@@ -91,7 +91,7 @@
 <body onload = "fct_montyhall()" style="font-family: consolas; font-size: 90%;">
 	<h2>Monty Hall: Stay or Switch Your Pick? (2013)</h2>
 	<br />
-	See <a href="http://gisblog.org">gisblog.org</a>.
+	See "Monty Hall" at <a href="http://gisblog.org">gisblog.org</a>. Code <a href="https://github.com/gisblog/gisblog.org/tree/master/apps-pocs/montyhall">here</a>.
 	<br /><br />
 	<span style="background-color: rgb(192, 192, 192);">[&nbsp;&spades;&nbsp;]</span>&nbsp;<span style="background-color: rgb(192, 192, 192);">[&nbsp;&hearts;&nbsp;]</span>&nbsp;<span style="background-color: rgb(192, 192, 192);">[&nbsp;&clubs;&nbsp;]</span><br />
 	<?php // &diams; // window.location.href, submit ( ) ?>
